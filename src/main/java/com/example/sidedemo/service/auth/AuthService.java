@@ -2,19 +2,21 @@ package com.example.sidedemo.service.auth;
 
 
 import com.example.sidedemo.domain.User;
+import com.example.sidedemo.dto.user.auth.login.LoginRequestDto;
+import com.example.sidedemo.dto.user.auth.login.LoginResponseDto;
 import com.example.sidedemo.dto.user.auth.signup.SignupRequestDto;
 import com.example.sidedemo.dto.user.auth.signup.SignupResponseDto;
 import com.example.sidedemo.repository.UserRepository;
 import com.example.sidedemo.service.notifiaction.EmailService;
 import com.example.sidedemo.store.VerificationCodeStore;
+import com.example.sidedemo.util.JwtUtil;
 import com.example.sidedemo.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 
-
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class AuthService {
     private final VerificationCodeGenerator codeGenerator;
     private final VerificationCodeStore codeStore;
     private final EmailService emailService;
-
+    private final JwtUtil jwtUtil;
 
     /*  함수
     1. usrename, password , email, phone_number를 입력받는다
@@ -36,11 +38,6 @@ public class AuthService {
     6. 요청간에는 dto를 사용한다
      */
 
-    /**
-     * 1) 인증코드 생성
-     * 2) 임시 저장
-     * 3) 이메일 전송
-     */
     public void sendVerificationCode(String email) {
         String code = codeGenerator.generate6DigitCode(); // 4자리
         codeStore.saveCode(email, code);
@@ -48,8 +45,8 @@ public class AuthService {
     }
 
     public SignupResponseDto registerUser(SignupRequestDto req) {
-        // 중복 검사
 
+        //중복검사 코드작성 필요
 
         String storedCode = codeStore.getCode(req.getEmail());
         if (storedCode == null || !storedCode.equals(req.getVerificationCode())) {
@@ -67,7 +64,6 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-
         // 사용 후 코드 삭제
         codeStore.removeCode(req.getEmail());
 
@@ -78,12 +74,30 @@ public class AuthService {
     }
 
     /* 로그인 함수
-
-
-
      */
 
+    public LoginResponseDto login(LoginRequestDto request) {
 
+        // 1. 사용자 조회
+        Optional<User> userOpt = userRepository.findByUserId(request.getUserId());
+        if (userOpt.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
 
+        User user = userOpt.get();
+        // 2. 비밀번호 확인
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        // 3. JWT 토큰 생성 (예: subject로 userId 사용)
+        String token = jwtUtil.generateToken(user.getUserId());
+
+        // 4. 응답 DTO 생성
+        return LoginResponseDto.builder()
+                .message("Login success")
+                .token(token)
+                .build();
+    }
 
 }

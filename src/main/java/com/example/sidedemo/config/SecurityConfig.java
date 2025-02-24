@@ -12,10 +12,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // 운영 환경에서는 CSRF 보호 및 HTTPS(예: HSTS) 설정 필요 – 여기서는 단순화를 위해 CSRF를 비활성화합니다.
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll()  // /api/auth/**는 인증없이 접근 허용
+                        .requestMatchers("/api/auth/**").permitAll()  // 인증 없이 접근 허용 (회원가입, 로그인)
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
