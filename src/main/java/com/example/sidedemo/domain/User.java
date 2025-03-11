@@ -1,6 +1,8 @@
 package com.example.sidedemo.domain;
 
 
+
+import com.example.sidedemo.calendar.plan.entity.Plan;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -29,7 +31,7 @@ public class User {
 
     // 사용자 아이디 (로그인 아이디, 고유값)
     @NotBlank(message = "User ID is mandatory")
-    @Column(name = "userId", nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     private String userId;
 
     // 사용자 비밀번호 (해시값으로 저장)
