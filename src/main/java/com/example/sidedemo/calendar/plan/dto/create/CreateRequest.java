@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto;
+package com.example.sidedemo.calendar.plan.dto.create;
 
 
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PlanRequestDto {
+public class CreateRequest {
 
     @NotBlank(message = "일정 이름은 필수입니다.")
     private String planName;

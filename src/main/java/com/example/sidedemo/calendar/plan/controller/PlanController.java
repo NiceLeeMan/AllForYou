@@ -3,8 +3,8 @@ package com.example.sidedemo.calendar.plan.controller;
 
 import com.example.sidedemo.domain.User;
 import com.example.sidedemo.calendar.plan.service.PlanService;
-import com.example.sidedemo.calendar.plan.dto.PlanRequestDto;
-import com.example.sidedemo.calendar.plan.dto.PlanResponseDto;
+import com.example.sidedemo.calendar.plan.dto.create.CreateRequest;
+import com.example.sidedemo.calendar.plan.dto.create.CreateResponse;
 
 import lombok.*;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +26,22 @@ public class PlanController {
      */
 
     @PostMapping("/{userId}")
-    public ResponseEntity<PlanResponseDto> createPlan(
-            @Validated @RequestBody PlanRequestDto request,
+    public ResponseEntity<CreateResponse> createPlan(
+            @Validated @RequestBody CreateRequest request,
             @RequestParam Long userId) {
         // 실제 서비스에서는 SecurityContextHolder를 통해 로그인한 User 객체를 가져옵니다.
         User dummyUser = new User();
         dummyUser.setId(userId);
 
-        PlanResponseDto response = planService.createPlan(request, dummyUser);
+        CreateResponse response = planService.createPlan(request, dummyUser);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{planId}")
-    public ResponseEntity<PlanResponseDto> updatePlan(
+    public ResponseEntity<CreateResponse> updatePlan(
             @PathVariable Long planId,
-            @Validated @RequestBody PlanRequestDto request) {
-        PlanResponseDto response = planService.updatePlan(planId, request);
+            @Validated @RequestBody CreateRequest request) {
+        CreateResponse response = planService.updatePlan(planId, request);
         return ResponseEntity.ok(response);
     }
 

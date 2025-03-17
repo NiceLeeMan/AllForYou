@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto;
+package com.example.sidedemo.calendar.plan.dto.create;
 
 import com.example.sidedemo.enums.plan.Enums;
 import lombok.*;
@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class RecurringPlanResponseDto extends PlanResponseDto {
+public class RecurringCreateResponse extends CreateResponse {
     private Enums.RecurrenceType repeatType;
     private String repeatDetail;
     private Integer repeatInterval;

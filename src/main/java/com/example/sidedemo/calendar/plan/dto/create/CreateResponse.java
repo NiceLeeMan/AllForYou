@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto;
+package com.example.sidedemo.calendar.plan.dto.create;
 
 
 
@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PlanResponseDto {
+public class CreateResponse {
 
     private Long id; //plan_id값을 의미
     private String planName;

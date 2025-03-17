@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto;
+package com.example.sidedemo.calendar.plan.dto.create;
 
 
 import com.example.sidedemo.enums.plan.Enums;
@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class RecurringPlanRequestDto extends PlanRequestDto {
+public class RecurringCreateRequest extends CreateRequest {
 
     @NotNull(message = "반복 유형은 필수입니다.")
     private Enums.RecurrenceType repeatType;  // 예: DAILY, WEEKLY, MONTHLY, YEARLY

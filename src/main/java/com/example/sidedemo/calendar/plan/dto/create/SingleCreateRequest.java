@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto;
+package com.example.sidedemo.calendar.plan.dto.create;
 
 
 import lombok.*;
@@ -9,5 +9,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class SinglePlanRequestDto extends PlanRequestDto {
+public class SingleCreateRequest extends CreateRequest {
+
 }

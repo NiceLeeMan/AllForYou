@@ -2,6 +2,7 @@ package com.example.sidedemo.calendar.plan.mapper;
 
 
 import com.example.sidedemo.calendar.plan.dto.*;
+import com.example.sidedemo.calendar.plan.dto.create.*;
 import com.example.sidedemo.calendar.plan.entity.Plan;
 import com.example.sidedemo.calendar.plan.entity.RecurringException;
 import com.example.sidedemo.calendar.plan.entity.RecurringPlan;
@@ -12,11 +13,11 @@ import org.springframework.stereotype.Component;
 public class planMapper {
 
     // DTO -> Entity (양방향 중 반대쪽)
-    public Plan toPlanEntity(PlanRequestDto dto) {
+    public Plan toPlanEntity(CreateRequest dto) {
 
         if ("RECURRING".equalsIgnoreCase(dto.getPlanType())) {
 
-            RecurringPlanRequestDto recurringDto = (RecurringPlanRequestDto) dto;
+            RecurringCreateRequest recurringDto = (RecurringCreateRequest) dto;
 
             return RecurringPlan.builder()
                     .planName(recurringDto.getPlanName())
@@ -36,7 +37,7 @@ public class planMapper {
 
         } else {
             // SINGLE 타입
-            SinglePlanRequestDto singleDto = (SinglePlanRequestDto) dto;
+            SingleCreateRequest singleDto = (SingleCreateRequest) dto;
 
             return SinglePlan.builder()
                     .planName(singleDto.getPlanName())
@@ -54,12 +55,12 @@ public class planMapper {
 
 
     // Entity -> DTO (양방향 중 한쪽)
-    public PlanResponseDto toPlanResponseDTO(Plan plan) {
+    public CreateResponse toPlanResponseDTO(Plan plan) {
 
         if ("RECURRING".equalsIgnoreCase(plan.getPlanType()) && plan instanceof RecurringPlan) {
             RecurringPlan recurring = (RecurringPlan) plan;
 
-            return RecurringPlanResponseDto.builder()
+            return RecurringCreateResponse.builder()
                     .id(recurring.getId())
                     .planName(recurring.getPlanName())
                     .planContent(recurring.getPlanContent())
@@ -79,7 +80,7 @@ public class planMapper {
 
         } else {
             // SINGLE 타입 (또는 기본 PlanResponseDto로 처리)
-            return PlanResponseDto.builder()
+            return CreateResponse.builder()
                     .id(plan.getId())
                     .planName(plan.getPlanName())
                     .planContent(plan.getPlanContent())
