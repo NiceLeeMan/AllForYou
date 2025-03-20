@@ -1,11 +1,6 @@
 package com.example.sidedemo.calendar.plan.service;
 
-import com.example.sidedemo.calendar.plan.dto.create.CreateRequest;
-import com.example.sidedemo.calendar.plan.dto.create.SingleCreateRequest;
 import com.example.sidedemo.calendar.plan.entity.Plan;
-import com.example.sidedemo.calendar.plan.mapper.planMapper;
-import com.example.sidedemo.calendar.plan.entity.RecurringPlan;
-import com.example.sidedemo.calendar.plan.entity.SinglePlan;
 import com.example.sidedemo.calendar.plan.repository.PlanRepository;
 import com.example.sidedemo.domain.User;
 import com.example.sidedemo.repository.UserRepository;
@@ -37,26 +32,28 @@ public class PlanService {
      * @param createRequest 클라이언트로부터 전달받은 PlanRequestDto
      * @param user       현재 로그인한 사용자 정보(User 객체)
      */
+
     @Transactional
-    public void createSinglePlan(CreateRequest createRequest, User user) {
-        //RepeatType에 관한건 Mapper함수가 알아서 변환해줌
-        Plan planEntity = planMapper.toPlanEntity(createRequest);
-        planEntity.setUser(user);
-        planRepository.save(planEntity );
+    public CreateResponse createSinglePlan(CreateRequest createRequest, User user) {
+
+        Plan SinglePlan = planMapper.toPlanEntity(createRequest);
+        SinglePlan.setUser(user);
+        Plan savedPlan = planRepository.save(SinglePlan);
+        return planMapper.toPlanResponseDTO(savedPlan);
     }
 
-    public SinglePlan updateSinglePlan(SingleCreateRequest RequestDto) {
-       ));
-
-    }
-
-    public SinglePlan deleteSinglePlan(SingleCreateRequest RequestDto) {
-
-    }
-
-    public SinglePlan getSinglePlan(SingleCreateRequest RequestDto) {
-        
-    }
+//    public SinglePlan updateSinglePlan(CreateSingleRequest RequestDto) {
+////
+//
+//    }
+//
+//    public SinglePlan deleteSinglePlan(CreateSingleRequest RequestDto) {
+//
+//    }
+//
+//    public SinglePlan getSinglePlan(CreateSingleRequest RequestDto) {
+//
+//    }
 
 
 
@@ -69,21 +66,21 @@ public class PlanService {
     *
     * */
 
-    public RecurringPlan createRecurringPlan(RecurringPlan recurringPlan) {
-        return planRepository.save(recurringPlan);
-    }
-
-    public RecurringPlan updateRecurringPlan(RecurringPlan recurringPlan) {
-        return planRepository.save(recurringPlan);
-    }
-
-    public RecurringPlan deleteRecurringPlan(RecurringPlan recurringPlan) {
-        planRepository.delete(recurringPlan);
-    }
-
-    public  RecurringPlan getRecurringPlan(RecurringPlan recurringPlan) {
-
-    }
+//    public RecurringPlan createRecurringPlan(RecurringPlan recurringPlan) {
+//        return planRepository.save(recurringPlan);
+//    }
+//
+//    public RecurringPlan updateRecurringPlan(RecurringPlan recurringPlan) {
+//        return planRepository.save(recurringPlan);
+//    }
+//
+//    public RecurringPlan deleteRecurringPlan(RecurringPlan recurringPlan) {
+//        planRepository.delete(recurringPlan);
+//    }
+//
+//    public  RecurringPlan getRecurringPlan(RecurringPlan recurringPlan) {
+//
+//    }
 
 
 
