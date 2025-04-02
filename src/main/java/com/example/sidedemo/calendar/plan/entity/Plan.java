@@ -1,6 +1,6 @@
 package com.example.sidedemo.calendar.plan.entity;
 
-import com.example.sidedemo.domain.User;
+import com.example.sidedemo.User.entity.User;
 import com.example.sidedemo.enums.Enums;
 import com.example.sidedemo.enums.Enums.PlanType;
 import jakarta.persistence.*;
