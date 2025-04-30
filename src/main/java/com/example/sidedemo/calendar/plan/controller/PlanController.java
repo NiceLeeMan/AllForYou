@@ -29,8 +29,8 @@ public class PlanController {
         User user = new User();
         user.setId(userId);
 
-        CreateResponse response = planService.createPlan(request, user);
-        return ResponseEntity.ok(response);
+
+
     }
 
 

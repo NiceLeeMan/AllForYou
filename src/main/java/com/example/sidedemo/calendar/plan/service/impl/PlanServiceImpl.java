@@ -1,6 +1,7 @@
 package com.example.sidedemo.calendar.plan.service.impl;
 
 import com.example.sidedemo.User.entity.User;
+import com.example.sidedemo.calendar.cache.service.CacheService;
 import com.example.sidedemo.calendar.plan.dto.create.CreateRequest;
 import com.example.sidedemo.calendar.plan.dto.create.CreateResponse;
 import com.example.sidedemo.calendar.plan.dto.delete.DeleteRequest;
@@ -10,15 +11,13 @@ import com.example.sidedemo.calendar.plan.dto.update.UpdateResponse;
 import com.example.sidedemo.calendar.plan.entity.Plan;
 import com.example.sidedemo.calendar.plan.repository.PlanRepository;
 import com.example.sidedemo.User.repository.UserRepository;
-import com.example.sidedemo.calendar.plan.service.cache.*;
 import com.example.sidedemo.calendar.plan.service.mapper.PlanMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -29,11 +28,8 @@ public class PlanServiceImpl {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
     private final CacheService cacheService;
-    private final RedisTemplate<String, Object> redisTemplate;
-
-
     private final PlanMapper planMapper;
-    private static final long CACHE_TTL_SECONDS = 360L;
+    private final List<CreateRequest> cacheList = new LinkedList<>();
 
     /**
      * 계획 생성 (DB에 바로 Insert)
@@ -42,20 +38,25 @@ public class PlanServiceImpl {
      * @param userId  현재 로그인 사용자 식별자
      * @return CreateResponse DTO
      */
+
     @Transactional
     public CreateResponse createPlan(CreateRequest request, Long userId) {
-        // 1) User 엔티티 조회 (가정)
+
+        // 1) User 엔티티 조회 : plan을 추가한 사용자가 존해하는지 우선 확인
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id = " + userId));
 
-        // 2) DTO → Plan 엔티티 변환
+        // 2) DTO → Plan 엔티티 변환 & DB 저장
         Plan plan = planMapper.dtoToEntity(request, user);
-
-        // 3) DB에 저장
         Plan savedPlan = planRepository.save(plan);
 
-        // 4) Entity → CreateResponse 변환 후 반환
-        return planMapper.entityToCreateResponse(savedPlan);
+        // 3) Entity → CreateResponse 변환 후 반환
+        CreateResponse response = planMapper.entityToCreateResponse(savedPlan);
+
+
+
+
+
     }
 
 
@@ -80,6 +81,7 @@ public class PlanServiceImpl {
 
         return cachedPlans;
     }
+
     /**
      * 계획 삭제 (DB에서 바로 Delete)
      *
