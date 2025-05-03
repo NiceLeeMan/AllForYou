@@ -1,10 +1,13 @@
 package com.example.sidedemo.calendar.cache.dto;
 
 
+import com.example.sidedemo.calendar.plan.dto.write.PlanWriteResponse;
+import com.example.sidedemo.enums.Enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.*;
 
+import java.lang.reflect.Type;
 import java.time.*;
 import java.util.Set;
 
@@ -32,17 +35,20 @@ public class PlanCacheEntry {
     private LocalTime alarmTime;
 
     // 반복 정보
-    private String planType;
-    private String repeatUnit;
+    private PlanType planType;
+    private RepeatUnit repeatUnit;
     private Integer repeatInterval;
     private Integer repeatDayOfMonth;
     private Integer repeatWeek;
     private DayOfWeek repeatWeekday;
     private Set<LocalDate> exceptionDates;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
 
 
     // Factory for summary
-    public static PlanCacheEntry fromSummary(UpsertDto dto, YearMonth ym) {
+    public static PlanCacheEntry fromSummary(PlanWriteResponse dto, YearMonth ym) {
         LocalDate start = dto.getStartDate();
         LocalDate end = dto.getEndDate();
         LocalDate firstOfMonth = ym.atDay(1);
@@ -56,29 +62,6 @@ public class PlanCacheEntry {
                 .segStart(segStart)
                 .segEnd(segEnd)
                 .build();
-    }
-
-    // Factory for detail
-    public static PlanCacheEntry fromDetail(UpsertDto dto) {
-        return PlanCacheEntry.builder()
-                .planId(dto.getId())
-                .planName(dto.getPlanName())
-                .planContent(dto.getPlanContent())
-                .startDate(dto.getStartDate())
-                .startTime(dto.getStartTime())
-                .endDate(dto.getEndDate())
-                .endTime(dto.getEndTime())
-                .location(dto.getLocation())
-                .alarmTime(dto.getAlarmTime())
-                .planType(dto.getPlanType())
-                .repeatUnit(dto.getRepeatUnit())
-                .repeatInterval(dto.getRepeatInterval())
-                .repeatDayOfMonth(dto.getRepeatDayOfMonth())
-                .repeatWeek(dto.getRepeatWeek())
-                .repeatWeekday(dto.getRepeatWeekday())
-                .exceptionDates(dto.getExceptionDates())
-                .build();
-
     }
 
 }

@@ -2,8 +2,8 @@ package com.example.sidedemo.calendar.plan.controller;
 
 
 import com.example.sidedemo.User.entity.User;
-import com.example.sidedemo.calendar.plan.dto.create.CreateRequest;
-import com.example.sidedemo.calendar.plan.dto.create.CreateResponse;
+import com.example.sidedemo.calendar.plan.dto.write.CreateRequest;
+import com.example.sidedemo.calendar.plan.dto.write.PlanWriteRespnse;
 import com.example.sidedemo.calendar.plan.service.impl.PlanServiceImpl;
 
 import lombok.*;
@@ -21,7 +21,7 @@ public class PlanController {
     private final PlanServiceImpl planService;
 
     @PostMapping
-    public ResponseEntity<CreateResponse> createPlan(
+    public ResponseEntity<PlanWriteRespnse> createPlan(
             @Validated @RequestBody CreateRequest request,
             @RequestParam Long userId) {
         // 실제 환경에서는 SecurityContext를 통해 인증된 User 객체를 가져와야 합니다.

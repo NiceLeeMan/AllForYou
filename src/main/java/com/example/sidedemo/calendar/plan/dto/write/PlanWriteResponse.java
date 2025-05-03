@@ -1,18 +1,18 @@
-package com.example.sidedemo.calendar.plan.dto.update;
+package com.example.sidedemo.calendar.plan.dto.write;
 
 
+import com.example.sidedemo.enums.Enums.PlanType;
+import com.example.sidedemo.enums.Enums.RepeatUnit;
 import lombok.*;
 import java.time.*;
 import java.util.Set;
-import com.example.sidedemo.enums.Enums.PlanType;
-import com.example.sidedemo.enums.Enums.RepeatUnit;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateResponse {
+public class PlanWriteResponse {
     private Long id;
     private String planName;
     private String planContent;
@@ -31,4 +31,5 @@ public class UpdateResponse {
     private Set<LocalDate> exceptionDates;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long userId;
 }

@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.create;
+package com.example.sidedemo.calendar.plan.dto.write;
 
 
 import com.example.sidedemo.enums.Enums.PlanType;

@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.delete;
+package com.example.sidedemo.calendar.plan.dto.write;
 
 
 import jakarta.validation.constraints.NotNull;
