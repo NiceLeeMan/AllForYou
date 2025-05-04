@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlanWriteResponse {
+public class Response {
     private Long id;
     private String planName;
     private String planContent;
@@ -32,4 +32,5 @@ public class PlanWriteResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
+    private String message;
 }

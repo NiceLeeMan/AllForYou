@@ -1,13 +1,12 @@
 package com.example.sidedemo.calendar.cache.dto;
 
 
-import com.example.sidedemo.calendar.plan.dto.write.PlanWriteResponse;
+import com.example.sidedemo.calendar.plan.dto.write.Response;
 import com.example.sidedemo.enums.Enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.*;
 
-import java.lang.reflect.Type;
 import java.time.*;
 import java.util.Set;
 
@@ -42,18 +41,28 @@ public class PlanCacheEntry {
     private Integer repeatWeek;
     private DayOfWeek repeatWeekday;
     private Set<LocalDate> exceptionDates;
+
+    //언제 만들어지고 업데이트됐는지.
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
 
 
     // Factory for summary
-    public static PlanCacheEntry fromSummary(PlanWriteResponse dto, YearMonth ym) {
-        LocalDate start = dto.getStartDate();
-        LocalDate end = dto.getEndDate();
-        LocalDate firstOfMonth = ym.atDay(1);
-        LocalDate lastOfMonth = ym.atEndOfMonth();
+    public static PlanCacheEntry monthlyPlansOverview(Response dto, YearMonth ym) {
+
+        //시작(2025-03-28), 종료(2025-04-03)
+        LocalDate start = dto.getStartDate(); //시작 2025-03-28,
+        LocalDate end = dto.getEndDate(); //종료 2025-04-03
+
+        //해당 MM의 1일~말일
+        LocalDate firstOfMonth = ym.atDay(1); // 2025-03-01
+        LocalDate lastOfMonth = ym.atEndOfMonth(); // 2025-03-31
+
+        //plan 시작일이 전번 달 이면 segStart = 1 , 1일이후면 segStart = startDate
         LocalDate segStart = start.isBefore(firstOfMonth) ? firstOfMonth : start;
+
+        //plan 종료일이 다음달 말일이면 segStart = lastOfMonth , 1일이후면 segStart = endDate
         LocalDate segEnd = end.isAfter(lastOfMonth) ? lastOfMonth : end;
 
         return PlanCacheEntry.builder()
