@@ -19,10 +19,8 @@ import java.util.Set;
         @Index(name = "idx_user_id", columnList = "user_id"),
         @Index(name = "idx_start_date", columnList = "start_date")
 })
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Plan {
 
