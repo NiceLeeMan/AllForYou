@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/plans/**").permitAll()   // 테스트용으로 인증 없이 접근/
+                        .requestMatchers("/api/plans","/api/plans/**").permitAll()   // 테스트용으로 인증 없이 접근/
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
