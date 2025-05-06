@@ -1,8 +1,10 @@
 package com.example.sidedemo.config;
 
 import com.example.sidedemo.calendar.cache.dto.PlanCacheEntry;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,19 +58,27 @@ public class RedisConfig {
     /** ③ 월별 캐시 전용 템플릿 (PlanCacheEntry 리스트) */
     @Bean
     public RedisTemplate<String, List<PlanCacheEntry>> monthlyRedisTemplate(
-            RedisConnectionFactory cf,
-            ObjectMapper redisObjectMapper) {
+            RedisConnectionFactory cf) {
+        // 1) ObjectMapper에 타입 정보 포함 설정
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        // LocalDate, LocalTime 지원
+        mapper.activateDefaultTyping(
+                LaissezFaireSubTypeValidator.instance,
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY
+        );
+
+        // 2) GenericJackson2JsonRedisSerializer에 커스텀 매퍼 주입
+        GenericJackson2JsonRedisSerializer serializer =
+                new GenericJackson2JsonRedisSerializer(mapper);
 
         RedisTemplate<String, List<PlanCacheEntry>> tpl = new RedisTemplate<>();
         tpl.setConnectionFactory(cf);
         tpl.setKeySerializer(new StringRedisSerializer());
+        tpl.setValueSerializer(serializer);
+        tpl.afterPropertiesSet();  // **반드시** 호출해야 정상 동작합니다
 
-        GenericJackson2JsonRedisSerializer jacksonSer =
-                new GenericJackson2JsonRedisSerializer(redisObjectMapper);
-
-        tpl.setValueSerializer(jacksonSer);
-        tpl.setHashValueSerializer(jacksonSer);
-        tpl.afterPropertiesSet();
         return tpl;
     }
 

@@ -8,7 +8,8 @@ import com.example.sidedemo.calendar.plan.entity.Plan;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.util.Set;
+
 
 @Component
 public class Mapper {
@@ -17,23 +18,22 @@ public class Mapper {
      * CreatePlanRequest DTO를 Plan 엔티티로 변환합니다.
      * - 사용자(User)는 별도로 전달받습니다.
      */
-    public Plan createDtoToEntity(CreateRequest request, User user) {
+    public Plan createDtoToEntity(CreateRequest req, User user) {
         return Plan.builder()
-                .planName(StringUtils.hasText(request.getPlanName()) ? request.getPlanName() : "제목없음")
-                .planContent(request.getPlanContent() != null ? request.getPlanContent() : "")
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .location(request.getLocation())
-                .alarmTime(request.getAlarmTime())
-                .planType(request.getPlanType())
-                .repeatUnit(request.getRepeatUnit())
-                .repeatInterval(request.getRepeatInterval())
-                .repeatDayOfMonth(request.getRepeatDayOfMonth())
-                .repeatWeek(request.getRepeatWeek())
-                .repeatWeekday(request.getRepeatWeekday())
-                .exceptionDates(request.getExceptionDates())
+                .planName(StringUtils.hasText(req.getPlanName()) ? req.getPlanName() : "제목없음")
+                .planContent(req.getPlanContent() != null ? req.getPlanContent() : "")
+                .startDate(req.getStartDate())
+                .endDate(req.getEndDate())
+                .startTime(req.getStartTime())
+                .endTime(req.getEndTime())
+                .location(req.getLocation())
+                .alarmTime(req.getAlarmTime())
+                .planType(req.getPlanType())
+                .repeatUnit(req.getRepeatUnit())
+                .repeatInterval(req.getRepeatInterval())
+                .repeatDayOfMonth(req.getRepeatDayOfMonth())
+                .repeatWeekday(req.getRepeatWeekdays() != null ? req.getRepeatWeekdays() : Set.of())
+                .exceptionDates(req.getExceptionDates() != null ? req.getExceptionDates() : Set.of())
                 .user(user)
                 .build();
     }
@@ -58,8 +58,7 @@ public class Mapper {
                 .repeatUnit(plan.getRepeatUnit())
                 .repeatInterval(plan.getRepeatInterval())
                 .repeatDayOfMonth(plan.getRepeatDayOfMonth())
-                .repeatWeek(plan.getRepeatWeek())
-                .repeatWeekday(plan.getRepeatWeekday())
+                .repeatWeekdays(plan.getRepeatWeekday())
                 .exceptionDates(plan.getExceptionDates())
                 .createdAt(plan.getCreatedAt())
                 .updatedAt(plan.getUpdatedAt())

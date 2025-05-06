@@ -53,11 +53,8 @@ public class CreateRequest {
     // 월 단위 반복 (일 단위 반복): 매월 N일에 반복되는 경우
     private Integer repeatDayOfMonth;
 
-    // 월 단위 반복 (주/요일 단위 반복): 몇 번째 주인지 (예: 둘째 주 → 2)
-    private Integer repeatWeek;
-
     // 월 단위 반복 (주/요일 단위 반복): 해당 요일 (예: WEDNESDAY)
-    private DayOfWeek repeatWeekday;
+    private Set<DayOfWeek> repeatWeekdays;
 
     // 예외 날짜: 반복 계획 중 제외할 날짜들
     private Set<LocalDate> exceptionDates;

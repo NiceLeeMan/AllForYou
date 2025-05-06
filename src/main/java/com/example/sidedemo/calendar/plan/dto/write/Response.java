@@ -26,8 +26,7 @@ public class Response {
     private RepeatUnit repeatUnit;
     private Integer repeatInterval;
     private Integer repeatDayOfMonth;
-    private Integer repeatWeek;
-    private DayOfWeek repeatWeekday;
+    private Set<DayOfWeek> repeatWeekdays;
     private Set<LocalDate> exceptionDates;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

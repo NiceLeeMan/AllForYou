@@ -38,8 +38,7 @@ public class PlanCacheEntry {
     private RepeatUnit repeatUnit;
     private Integer repeatInterval;
     private Integer repeatDayOfMonth;
-    private Integer repeatWeek;
-    private DayOfWeek repeatWeekday;
+    private Set<DayOfWeek> repeatWeekdays;
     private Set<LocalDate> exceptionDates;
 
     //언제 만들어지고 업데이트됐는지.

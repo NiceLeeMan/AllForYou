@@ -230,8 +230,7 @@ public class PlanServiceImpl {
         plan.setRepeatUnit(req.getRepeatUnit());
         plan.setRepeatInterval(req.getRepeatInterval());
         plan.setRepeatDayOfMonth(req.getRepeatDayOfMonth());
-        plan.setRepeatWeek(req.getRepeatWeek());
-        plan.setRepeatWeekday(req.getRepeatWeekday());
+        plan.setRepeatWeekday(req.getRepeatWeekdays());
         plan.setExceptionDates(req.getExceptionDates());
         plan.setUpdatedAt(LocalDateTime.now());
 

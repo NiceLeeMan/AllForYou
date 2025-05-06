@@ -29,7 +29,6 @@ public class SingleResponse {
     private RepeatUnit repeatUnit;
     private Integer repeatInterval;
     private Integer repeatDayOfMonth;
-    private Integer repeatWeek;
     private DayOfWeek repeatWeekday;
     private Set<LocalDate> exceptionDates;
     private LocalDateTime createdAt;

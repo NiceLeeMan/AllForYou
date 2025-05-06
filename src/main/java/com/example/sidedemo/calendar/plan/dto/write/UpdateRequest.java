@@ -3,6 +3,7 @@ package com.example.sidedemo.calendar.plan.dto.write;
 
 import com.example.sidedemo.enums.Enums.RepeatUnit;
 import com.example.sidedemo.enums.Enums.PlanType;
+import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.*;
@@ -34,8 +35,6 @@ public class UpdateRequest {
     private RepeatUnit repeatUnit;
     private Integer repeatInterval;
     private Integer repeatDayOfMonth;
-    private Integer repeatWeek;
-    private DayOfWeek repeatWeekday;
-
+    private Set<DayOfWeek> repeatWeekdays;
     private Set<LocalDate> exceptionDates;  // 변경할 예외 날짜들
 }
