@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -118,6 +119,36 @@ public class PlanServiceImpl {
                 .message("Deleted")
                 .build();
 
+    }
+
+    @Transactional
+    public Response deleteOccurrence(Long planId, LocalDate date, Long userId) {
+        // 1) Plan 조회 및 소유권 검증
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan not found: " + planId));
+        if (!plan.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized to delete this occurrence");
+        }
+
+        // 2) 예외 날짜 추가 및 DB 저장
+        Set<LocalDate> exceptions = plan.getExceptionDates();
+        exceptions.add(date);
+        plan.setExceptionDates(exceptions);
+        planRepository.save(plan);
+
+        // 3) 캐시에서 해당 회차(날짜)만 제거
+        cacheService.deleteFromMonthlyCache(
+                userId,
+                planId,
+                date,    // span start
+                date     // span end
+        );
+
+        // 4) 응답
+        return Response.builder()
+                .id(planId)
+                .message("Deleted occurrence on " + date)
+                .build();
     }
 
         /**

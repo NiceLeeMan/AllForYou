@@ -13,10 +13,12 @@ import com.example.sidedemo.calendar.plan.service.PlanServiceImpl;
 
 import jakarta.validation.Valid;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -76,6 +78,16 @@ public class PlanController {
         Response deleted = planService.deletePlan(deleteReq, userId);
         return ResponseEntity
                 .ok(deleted);
+    }
+
+    @DeleteMapping("/{id}/occurrence")
+    public ResponseEntity<Response> deleteOccurrence(
+            @RequestHeader("X-USER-ID") Long userId,
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        Response resp = planService.deleteOccurrence(id, date, userId);
+        return ResponseEntity.ok(resp);
     }
 
     @GetMapping("/month")
