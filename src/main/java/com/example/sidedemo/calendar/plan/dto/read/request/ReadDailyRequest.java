@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.read;
+package com.example.sidedemo.calendar.plan.dto.read.request;
 
 
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +16,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReadDailyRequest {
 
-    @NotNull
+    @NotNull(message = "조회할 날짜는 필수입니다")
     private LocalDate date;
 }

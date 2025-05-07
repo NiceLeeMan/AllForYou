@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.read;
+package com.example.sidedemo.calendar.plan.dto.read.response;
 
 
 import lombok.*;

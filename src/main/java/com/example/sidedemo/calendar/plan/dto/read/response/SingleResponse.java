@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.read;
+package com.example.sidedemo.calendar.plan.dto.read.response;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
 
+import com.example.sidedemo.calendar.plan.enums.Enums.*;
 import lombok.*;
 
 /**
