@@ -1,8 +1,7 @@
-package com.example.sidedemo.calendar.cache.dto;
+package com.example.sidedemo.calendar.cache;
 
 
 import com.example.sidedemo.calendar.plan.dto.write.Response;
-import com.example.sidedemo.enums.Enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.*;

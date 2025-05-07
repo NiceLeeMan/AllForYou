@@ -1,8 +1,7 @@
 package com.example.sidedemo.calendar.plan.entity;
 
 import com.example.sidedemo.User.entity.User;
-import com.example.sidedemo.enums.Enums.*;
-import com.example.sidedemo.enums.Enums.PlanType;
+import com.example.sidedemo.calendar.plan.enums.Enums.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +32,7 @@ public class Plan {
     @Column(name = "plan_name", nullable = false, length = 50)
     private String planName;
 
-    @Column(name = "plan_content", columnDefinition = "TEXT")
+    @Column(name = "plan_content", columnDefinition = "TEXT" , length = 1000)
     private String planContent;
 
     @NotNull
@@ -105,4 +104,5 @@ public class Plan {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_plan_user"))
     private User user;
+
 }

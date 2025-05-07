@@ -1,8 +1,8 @@
 package com.example.sidedemo.calendar.plan.service;
 
 import com.example.sidedemo.User.entity.User;
-import com.example.sidedemo.calendar.cache.dto.PlanCacheEntry;
-import com.example.sidedemo.calendar.cache.service.CacheService;
+import com.example.sidedemo.calendar.cache.PlanCacheEntry;
+import com.example.sidedemo.calendar.cache.CacheService;
 import com.example.sidedemo.calendar.plan.dto.write.*;
 import com.example.sidedemo.calendar.plan.entity.Plan;
 import com.example.sidedemo.calendar.plan.repository.PlanRepository;
