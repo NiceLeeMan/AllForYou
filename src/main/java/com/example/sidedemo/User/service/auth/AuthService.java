@@ -6,20 +6,26 @@ import com.example.sidedemo.User.dto.login.LoginRequestDto;
 import com.example.sidedemo.User.dto.login.LoginResponseDto;
 import com.example.sidedemo.User.dto.signUp.SignupRequestDto;
 import com.example.sidedemo.User.dto.signUp.SignupResponseDto;
+import com.example.sidedemo.User.exception.*;
 import com.example.sidedemo.User.repository.UserRepository;
 import com.example.sidedemo.User.service.notifiaction.EmailService;
 import com.example.sidedemo.User.store.VerificationCodeStore;
 import com.example.sidedemo.User.util.JwtUtil;
 import com.example.sidedemo.User.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -44,33 +50,39 @@ public class AuthService {
         emailService.sendAuthCodeMail(email,"인증번호 전송",code);
     }
 
+    @Transactional
     public SignupResponseDto registerUser(SignupRequestDto req) {
 
-        //중복검사 코드작성 필요
 
-        String storedCode = codeStore.getCode(req.getEmail());
-        if (storedCode == null || !storedCode.equals(req.getVerificationCode())) {
-            System.out.println("인증코드 틀렸다");
-            throw new RuntimeException("Invalid verification code");
+        try {
+            //1)인증 코드 확인
+            verifyCode(req.getEmail(), req.getVerificationCode());
+            //2)ID , PW , Email 검사
+            validateDistinctUserIdAndPassword(req.getUserId(),req.getPassword());
+            checkDuplicates(req.getUserId(),req.getPassword());
+
+            User user = User.builder()
+                    .name(req.getName())
+                    .userId(req.getUserId())
+                    .password(passwordEncoder.encode(req.getPassword()))
+                    .email(req.getEmail())
+                    .phoneNumber(req.getPhoneNumber())
+                    .build();
+
+            userRepository.save(user);
+
+            return (
+                    SignupResponseDto.builder()
+                    .message("회원가입이 정상 처리되었습니다.")
+                    .userId(req.getUserId())
+                    .build())
+                    ;
+        } catch (DataIntegrityViolationException e) {
+            log.error("Database integrity violation during registerUser", e);
+            throw new BadRequestException("회원 정보 저장 중 오류가 발생했습니다.");
+        } finally {
+            codeStore.removeCode(req.getEmail());
         }
-
-        // 해시화 후 저장
-        User user = User.builder()
-                .name(req.getName())
-                .userId(req.getUserId())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .email(req.getEmail())
-                .phoneNumber(req.getPhoneNumber())
-                .build();
-
-        userRepository.save(user);
-        // 사용 후 코드 삭제
-        codeStore.removeCode(req.getEmail());
-
-        return SignupResponseDto.builder()
-                .message("Registration success!")
-                .userId(user.getUserId())
-                .build();
     }
 
     /* 로그인 함수
@@ -98,6 +110,35 @@ public class AuthService {
                 .message("Login success")
                 .token(token)
                 .build();
+    }
+
+    private void checkDuplicates(String userId, String email) {
+        if (userRepository.existsUserByUserId(userId)) {
+            log.warn("Duplicate userId detected: {}", userId);
+            throw new DuplicateUserIdException("이미 사용 중인 아이디입니다.");
+        }
+
+        if (userRepository.existsUserByEmail(email)) {
+            log.warn("Duplicate email detected: {}", email);
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
+        }
+    }
+
+    private void verifyCode(String email, String code) {
+        String stored = codeStore.getCode(email);
+        byte[] storedBytes = stored != null ? stored.getBytes(StandardCharsets.UTF_8) : new byte[0];
+        byte[] inputBytes = code.getBytes(StandardCharsets.UTF_8);
+        if (stored == null || !MessageDigest.isEqual(storedBytes, inputBytes)) {
+            log.warn("Invalid verification code for email={}", email);
+            throw new InvalidVerificationCodeException("인증코드가 유효하지 않습니다.");
+        }
+    }
+
+    private void validateDistinctUserIdAndPassword(String userId, String password)  {
+        if (userId.equals(password)) {
+            log.warn("UserId and password must differ: {}", userId);
+            throw new BadRequestException("아이디와 비밀번호는 같을 수 없습니다.");
+        }
     }
 
 }

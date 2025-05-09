@@ -39,3 +39,5 @@ out/
 /appl
 ### VS Code ###
 .vscode/
+
+#로컬 Gradle 캐시폴더
