@@ -1,8 +1,6 @@
-package com.example.sidedemo.User.entity;
+package com.example.sidedemo.User.common.entity;
 
-
-
-import com.example.sidedemo.calendar.plan.entity.Plan;
+import com.example.sidedemo.calendar.common.entity.Plan;
 import lombok.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

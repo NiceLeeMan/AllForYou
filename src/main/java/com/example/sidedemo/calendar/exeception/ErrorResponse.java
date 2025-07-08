@@ -1,9 +1,7 @@
-package com.example.sidedemo.calendar.execption;
+package com.example.sidedemo.calendar.exeception;
 
 
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

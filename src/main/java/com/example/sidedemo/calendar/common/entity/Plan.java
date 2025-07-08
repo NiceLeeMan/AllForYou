@@ -1,6 +1,6 @@
-package com.example.sidedemo.calendar.plan.entity;
+package com.example.sidedemo.calendar.common.entity;
 
-import com.example.sidedemo.User.entity.User;
+import com.example.sidedemo.User.common.entity.User;
 import com.example.sidedemo.calendar.plan.enums.Enums.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +13,9 @@ import java.time.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Entity
 @Table(name = "plans", indexes = {
         @Index(name = "idx_user_id", columnList = "user_id"),
@@ -22,6 +25,8 @@ import java.util.Set;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Plan {
+
+    private static final Logger log = LoggerFactory.getLogger(Plan.class);
 
     @Id
     @SequenceGenerator(name = "plan_seq", sequenceName = "plan_seq", allocationSize = 1)
@@ -105,4 +110,7 @@ public class Plan {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_plan_user"))
     private User user;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
 }

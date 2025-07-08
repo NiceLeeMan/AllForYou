@@ -1,4 +1,4 @@
-package com.example.sidedemo.User.util;
+package com.example.sidedemo.User.common.util;
 
 import org.springframework.stereotype.Component;
 
@@ -9,10 +9,8 @@ public class VerificationCodeGenerator {
 
     private static final SecureRandom random = new SecureRandom();
 
-
     public String generate6DigitCode() {
         int code = 100000 + random.nextInt(900000); // 100000 ~ 999999
         return String.valueOf(code);
     }
-
 }

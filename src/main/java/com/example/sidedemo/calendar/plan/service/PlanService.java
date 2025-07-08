@@ -1,14 +1,17 @@
 package com.example.sidedemo.calendar.plan.service;
 
-import com.example.sidedemo.User.entity.User;
+import com.example.sidedemo.User.common.entity.User;
 import com.example.sidedemo.calendar.cache.PlanCacheEntry;
 import com.example.sidedemo.calendar.cache.CacheService;
 import com.example.sidedemo.calendar.plan.dto.write.*;
-import com.example.sidedemo.calendar.plan.entity.Plan;
-import com.example.sidedemo.calendar.plan.repository.PlanRepository;
-import com.example.sidedemo.User.repository.UserRepository;
+import com.example.sidedemo.calendar.common.entity.Plan;
+import com.example.sidedemo.calendar.common.repository.PlanRepository;
+import com.example.sidedemo.User.common.repository.UserRepository;
 import com.example.sidedemo.calendar.plan.service.mapper.Mapper;
+import com.example.sidedemo.calendar.plan.exception.PlanNotFoundException;
+import com.example.sidedemo.calendar.plan.exception.UnauthorizedPlanAccessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlanServiceImpl {
+public class PlanService {
 
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
@@ -43,7 +46,7 @@ public class PlanServiceImpl {
 
         // 1) User 엔티티 조회 : plan을 추가한 사용자가 존해하는지 우선 확인
         User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id = " + userId));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id = " + userId));
 
         // 2) DTO → Plan 엔티티 변환 & DB 저장
         Plan plan = planMapper.createDtoToEntity(request,currentUser);
@@ -62,12 +65,12 @@ public class PlanServiceImpl {
 
         //수정전 Plan을 가져옴
         Plan oldPlan = planRepository.findById(newPlan.getId())
-                .orElseThrow(() -> new RuntimeException("Plan not found with id = " + newPlan.getId()));
+                .orElseThrow(() -> new PlanNotFoundException(newPlan.getId()));
 
 
         // 2) 소유권 검증(Optional)
         if (!oldPlan.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to update this plan");
+            throw new UnauthorizedPlanAccessException();
         }
 
         //oldPlan -> newPlan 후 DB에 저장
@@ -98,9 +101,9 @@ public class PlanServiceImpl {
 
         // 1) DB에서 기존 Plan 조회 및 소유권 검증
         Plan existing = planRepository.findById(deleteRequest.getId())
-                .orElseThrow(() -> new RuntimeException("Plan not found with id = " + deleteRequest.getId()));
+                .orElseThrow(() -> new PlanNotFoundException(deleteRequest.getId()));
         if (!existing.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this plan");
+            throw new UnauthorizedPlanAccessException();
         }
 
         // 2) DB 삭제
@@ -125,9 +128,10 @@ public class PlanServiceImpl {
     public Response deleteOccurrence(Long planId, LocalDate date, Long userId) {
         // 1) Plan 조회 및 소유권 검증
         Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new RuntimeException("Plan not found: " + planId));
+                .orElseThrow(() -> new PlanNotFoundException(planId));
+
         if (!plan.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this occurrence");
+            throw new UnauthorizedPlanAccessException();
         }
 
         // 2) 예외 날짜 추가 및 DB 저장
@@ -226,9 +230,9 @@ public class PlanServiceImpl {
     public Response readPlan(Long userId, Long planId) {
         // 1) DB에서 조회 및 소유권 검증
         Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new RuntimeException("Plan not found: " + planId));
+                .orElseThrow(() -> new PlanNotFoundException(planId));
         if (!plan.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedPlanAccessException();
         }
 
         // 2) 캐시에 요약이 존재하면(=이미 월별 인덱싱 됐으면) 바로 응답 DTO 생성

@@ -1,10 +1,10 @@
 package com.example.sidedemo.calendar.plan.service.mapper;
 
 
-import com.example.sidedemo.User.entity.User;
+import com.example.sidedemo.User.common.entity.User;
 import com.example.sidedemo.calendar.plan.dto.write.CreateRequest;
 import com.example.sidedemo.calendar.plan.dto.write.Response;
-import com.example.sidedemo.calendar.plan.entity.Plan;
+import com.example.sidedemo.calendar.common.entity.Plan;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

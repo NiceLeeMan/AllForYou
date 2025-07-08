@@ -1,7 +1,7 @@
-package com.example.sidedemo.calendar.plan.repository;
+package com.example.sidedemo.calendar.common.repository;
 
 
-import com.example.sidedemo.calendar.plan.entity.Plan;
+import com.example.sidedemo.calendar.common.entity.Plan;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PlanRepository  extends JpaRepository<Plan, Long> {

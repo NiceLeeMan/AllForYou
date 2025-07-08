@@ -1,4 +1,4 @@
-package com.example.sidedemo.calendar.execption;
+package com.example.sidedemo.calendar.exeception;
 
 import com.example.sidedemo.calendar.plan.dto.write.*;
 import jakarta.persistence.PersistenceException;
