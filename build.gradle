@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.2'
+    id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.example'
@@ -9,7 +10,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(22)
     }
 }
 
@@ -25,25 +26,31 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2"
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
-
-    // JJWT 구현체 (런타임 시 필요)
+    // JJWT 런타임 구현체
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    // JSON 처리 (Jackson을 사용하는 경우)
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy(tasks.named('jacocoTestReport'))
+}
+
+tasks.named('jacocoTestReport') {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
