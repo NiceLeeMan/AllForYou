@@ -1,6 +1,6 @@
-package com.example.sidedemo.calendar.exeception;
+package com.example.sidedemo.calendar.exception;
 
-import com.example.sidedemo.calendar.plan.dto.write.*;
+import com.example.sidedemo.calendar.plan.dto.request.CreateRequest;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;

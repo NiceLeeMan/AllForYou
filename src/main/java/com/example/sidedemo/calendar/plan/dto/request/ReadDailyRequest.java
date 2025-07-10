@@ -1,5 +1,4 @@
-package com.example.sidedemo.calendar.plan.dto.read.request;
-
+package com.example.sidedemo.calendar.plan.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

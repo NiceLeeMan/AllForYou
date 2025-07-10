@@ -3,7 +3,7 @@ package com.example.sidedemo.calendar.cache;
 
 
 
-import com.example.sidedemo.calendar.plan.dto.write.Response;
+import com.example.sidedemo.calendar.plan.dto.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;

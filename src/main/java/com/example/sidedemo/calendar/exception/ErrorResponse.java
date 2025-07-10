@@ -1,7 +1,8 @@
-package com.example.sidedemo.calendar.exeception;
-
+package com.example.sidedemo.calendar.exception;
 
 import lombok.*;
+
+import java.util.Map;
 
 @Getter
 @Setter
@@ -18,4 +19,9 @@ public class ErrorResponse {
      * 사용자에게 보여줄 메시지
      */
     private String message;
+
+    /**
+     * 상세 에러 정보 (Validation 에러의 경우 필드별 에러 메시지)
+     */
+    private Map<String, String> details;
 }

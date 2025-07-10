@@ -1,13 +1,14 @@
 package com.example.sidedemo.calendar.plan.controller;
 
-import com.example.sidedemo.calendar.plan.dto.read.request.ReadDailyRequest;
-import com.example.sidedemo.calendar.plan.dto.read.request.ReadMonthlyRequest;
-import com.example.sidedemo.calendar.plan.dto.read.request.ReadSingleRequest;
-import com.example.sidedemo.calendar.plan.dto.write.CreateRequest;
-import com.example.sidedemo.calendar.plan.dto.write.DeleteRequest;
-import com.example.sidedemo.calendar.plan.dto.write.Response;
-import com.example.sidedemo.calendar.plan.dto.write.UpdateRequest;
-import com.example.sidedemo.calendar.plan.service.PlanService;
+import com.example.sidedemo.calendar.plan.dto.request.CreateRequest;
+import com.example.sidedemo.calendar.plan.dto.request.ReadDailyRequest;
+import com.example.sidedemo.calendar.plan.dto.request.ReadSingleRequest;
+import com.example.sidedemo.calendar.plan.dto.request.ReadMonthlyRequest;
+import com.example.sidedemo.calendar.plan.dto.request.DeleteRequest;
+import com.example.sidedemo.calendar.plan.dto.request.updateRequest;
+import com.example.sidedemo.calendar.plan.dto.response.Response;
+import com.example.sidedemo.calendar.plan.service.PlanCommandService;
+import com.example.sidedemo.calendar.plan.service.PlanQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,14 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlanController {
 
-    private final PlanService planService;
+    private final PlanCommandService planCommandService;
+    private final PlanQueryService planQueryService;
 
     @PostMapping
     public ResponseEntity<Response> createPlan(
             @AuthenticationPrincipal String userId,
             @RequestBody @Valid CreateRequest request
     ) {
-        Response created = planService.createPlan(request, Long.valueOf(userId));
+        Response created = planCommandService.createPlan(request, Long.valueOf(userId));
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
@@ -38,10 +40,10 @@ public class PlanController {
     public ResponseEntity<Response> updatePlan(
             @AuthenticationPrincipal String userId,
             @PathVariable Long id,
-            @RequestBody @Valid UpdateRequest request
+            @RequestBody @Valid updateRequest request
     ) {
         request.setId(id);
-        Response updated = planService.updatePlan(request, Long.valueOf(userId));
+        Response updated = planCommandService.updatePlan(request, Long.valueOf(userId));
         return ResponseEntity.ok(updated);
     }
 
@@ -51,7 +53,7 @@ public class PlanController {
             @PathVariable Long id
     ) {
         DeleteRequest deleteReq = DeleteRequest.builder().id(id).build();
-        Response deleted = planService.deletePlan(deleteReq, Long.valueOf(userId));
+        Response deleted = planCommandService.deletePlan(deleteReq, Long.valueOf(userId));
         return ResponseEntity.ok(deleted);
     }
 
@@ -61,7 +63,7 @@ public class PlanController {
             @PathVariable Long id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        Response resp = planService.deleteOccurrence(id, date, Long.valueOf(userId));
+        Response resp = planCommandService.deleteOccurrence(id, date, Long.valueOf(userId));
         return ResponseEntity.ok(resp);
     }
 
@@ -71,7 +73,7 @@ public class PlanController {
             @Valid ReadMonthlyRequest req
     ) {
         YearMonth ym = YearMonth.of(req.getYear(), req.getMonth());
-        List<Response> list = planService.readMonthlyPlans(Long.valueOf(userId), ym);
+        List<Response> list = planQueryService.readMonthlyPlans(Long.valueOf(userId), ym);
         return ResponseEntity.ok(list);
     }
 
@@ -80,7 +82,7 @@ public class PlanController {
             @AuthenticationPrincipal String userId,
             @Valid ReadDailyRequest req
     ) {
-        List<Response> list = planService.readDailyPlans(Long.valueOf(userId), req.getDate());
+        List<Response> list = planQueryService.readDailyPlans(Long.valueOf(userId), req.getDate());
         return ResponseEntity.ok(list);
     }
 
@@ -89,7 +91,7 @@ public class PlanController {
             @AuthenticationPrincipal String userId,
             @Valid ReadSingleRequest req
     ) {
-        Response plan = planService.readPlan(Long.valueOf(userId), req.getPlanId());
+        Response plan = planQueryService.readPlan(Long.valueOf(userId), req.getPlanId());
         return ResponseEntity.ok(plan);
     }
 }
